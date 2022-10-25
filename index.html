@@ -1,36 +1,71 @@
 <html>
     <head>
+        <style>
+            body {
+                background-color: #f3f3f3;
+                color: #292929;
+                font-family: Arial, Helvetica, sans-serif;
+                padding: 16px;
+            }
+            p {
+                font-size: 16px;
+                line-height: 1.5;
+                padding: 8px 0;
+            }
+            input, button {
+                border: 1.5px solid #686868;
+                border-radius: 10px;
+                padding: 8px 16px;
+                margin: 2px;
+            }
+        </style>
         <title>nikos lil pinger example app</title>
         <script>
+
             // ping function kaldes når man trykker på knappen
-            function ping() {
-                const address = document.getElementById('pingButton').value;
-                // fetch kaldet til /ping
-                fetch('/ping', {
+            async function pingAdress(host) {
+                // sender vores host-name til express serveren 
+                const response = await fetch('http://localhost:3000/ping', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        address: address
-                    })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        // data er det som bliver returneret fra /ping
-                        console.log(data);
-                        // ændrer teksten på knappen til det der bliver returneret fra /ping
-                        document.getElementById('pingButton').value = data;
-                    });
+                    body: JSON.stringify({ host: host })
+                });
+
+                const jsonBody = await response.json()
+
+
+                console.log(jsonBody);
+
+                if(!response.ok) {
+                    throw new Error('Server returned status code ' + response.status);
+                }
+                
+                return jsonBody.elapsed
+            }
+
+            async function run() {
+                const address = document.getElementById('pingInput').value;
+                // fetch kaldet til /ping
+                try {
+                    const rtt = await pingAdress(address)
+                    document.getElementById('pingError').innerHTML = '';
+                    document.getElementById('pingResult').innerHTML = 'Round trip time for ' + address + ': ' + rtt;
+                } catch (error) {
+                    document.getElementById('pingError').innerHTML = error;
+                }
+
             }
         </script>
-
     </head>
     <body>
         <h1>http(s) pinger example</h1>
-        <input type="text" name="name"  id="pingButton" />
-        <button onclick="ping()">
+        <input name="host" placeholder="https://google.com" id="pingInput" />
+        <button onclick="run()">
             Ping 
         </button>
+        <p id="pingResult"></p>
+        <p id="pingError" style="color:red"></p>
     </body>
 </html>
