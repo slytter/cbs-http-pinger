@@ -40,13 +40,14 @@ const icmp = require('icmp')
 
 
 
-// Opgave 1 – Programmer så at /ping end-pointet sender 10 requests og sender gennemsnits svartiden tilbage.
+// Opgave 1:
 
-/* GET index.html */
+// Serve index.html
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html')
 })
 
+// Serve style.css
 app.get('/style', (req, res) => {
     res.sendFile(__dirname + '/style.css')
 })
@@ -59,7 +60,7 @@ app.post('/ping', async (req, res) => {
         // Her sender vi et ICMP ping til hosten
         const response = await icmp.send(req.body.host, "A message", 1000)
         
-        // Programmer så at /ping end-pointet sender 10 requests og sender gennemsnits svartiden tilbage.
+        // Opgave 1: Programmer så at /ping end-pointet sender 10 requests og sender gennemsnits svartiden tilbage.
         // ...
         
         
