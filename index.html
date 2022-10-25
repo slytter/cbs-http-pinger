@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <title>nikos lil pinger example app</title>
+        <script>
+            // ping function kaldes når man trykker på knappen
+            function ping() {
+                const address = document.getElementById('pingButton').value;
+                // fetch kaldet til /ping
+                fetch('/ping', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        address: address
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // data er det som bliver returneret fra /ping
+                        console.log(data);
+                        // ændrer teksten på knappen til det der bliver returneret fra /ping
+                        document.getElementById('pingButton').value = data;
+                    });
+            }
+        </script>
+
+    </head>
+    <body>
+        <h1>http(s) pinger example</h1>
+        <input type="text" name="name"  id="pingButton" />
+        <button onclick="ping()">
+            Ping 
+        </button>
+    </body>
+</html>
