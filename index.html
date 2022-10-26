@@ -13,10 +13,11 @@
                     body: JSON.stringify({ host: host })
                 });
                 
-                const jsonBody = await response.json()
-                if(!response.ok) {
-                    throw new Error('Server returned status code ' + response.status);
+                if(response.status !== 200) {
+                    throw new Error('/ping returned status code ' + response.status);
                 }
+
+                const jsonBody = await response.json()
                 return jsonBody.elapsed
             }
 
